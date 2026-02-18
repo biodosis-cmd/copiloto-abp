@@ -10,6 +10,7 @@ import { DashboardLayout } from '@/layouts/DashboardLayout'
 import { Toaster, toast } from 'sonner'
 import { db } from './db'
 import { generateUUID } from '@/utils/uuid'
+import { PWAInstallPrompt } from '@/components/PWAInstallPrompt'
 
 function App() {
   const [session, setSession] = useState(null);
