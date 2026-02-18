@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 export function TitleSlide({ data }) {
     return (
-        <div className="flex flex-col items-center justify-center h-full text-center space-y-8 p-12">
+        <div className="flex flex-col items-center justify-center min-h-full text-center space-y-8 p-12">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

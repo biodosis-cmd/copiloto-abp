@@ -24,7 +24,7 @@ export function TimelineSlide({ phase, index, total }) {
     const Icon = theme.icon;
 
     return (
-        <div className="h-full flex flex-col p-8 md:p-16 relative overflow-hidden">
+        <div className="min-h-full flex flex-col p-6 md:p-16 relative">
             {/* Background Decoration */}
             <div className={`absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br ${theme.bg} opacity-10 rounded-full blur-3xl -mr-32 -mt-32`}></div>
             <div className={`absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr ${theme.bg} opacity-10 rounded-full blur-3xl -ml-32 -mb-32`}></div>
@@ -32,7 +32,7 @@ export function TimelineSlide({ phase, index, total }) {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="relative z-10 h-full flex flex-col justify-center max-w-5xl mx-auto w-full"
+                className="relative z-10 flex flex-col justify-center max-w-5xl mx-auto w-full py-10"
             >
                 {/* Header Badge */}
                 <div className="flex items-center gap-4 mb-8">

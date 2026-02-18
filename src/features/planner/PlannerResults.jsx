@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { copyToClipboard } from '@/utils/clipboard.js';
 import { Button } from '@/components/ui/Button';
 import { MatrixView } from './MatrixView';
 import { ScheduleView } from './ScheduleView';
@@ -80,8 +81,8 @@ export function PlannerResults({ data, onReset }) {
                     <Button variant="outline" size="sm" onClick={() => window.print()}>
                         <Printer className="mr-2 h-4 w-4" /> Imprimir
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => {
-                        navigator.clipboard.writeText(JSON.stringify(localData, null, 2));
+                    <Button variant="outline" size="sm" onClick={async () => {
+                        await copyToClipboard(JSON.stringify(localData, null, 2));
                         toast.success("JSON copiado al portapapeles");
                     }}>
                         <Copy className="mr-2 h-4 w-4" /> JSON

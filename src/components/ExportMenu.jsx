@@ -89,7 +89,7 @@ export function ExportMenu({ data }) {
                         animate={{ opacity: 1, y: 0, scale: 1, x: 0 }}
                         exit={{ opacity: 0, y: 10, scale: 0.9 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute right-0 top-full mt-3 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 overflow-hidden origin-top-right"
+                        className="absolute right-0 md:right-0 left-0 md:left-auto top-full mt-3 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 overflow-hidden origin-top-left md:origin-top-right"
                     >
                         <div className="flex flex-col gap-1">
                             {options.map((group, idx) => (

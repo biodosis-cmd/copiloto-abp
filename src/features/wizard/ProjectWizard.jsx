@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { copyToClipboard } from '@/utils/clipboard.js';
 import { db } from '../../db';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
@@ -81,10 +82,10 @@ export function ProjectWizard({ onSubmit, isLoading, initialData }) {
         }
     };
 
-    const handleCopyPrompt = () => {
+    const handleCopyPrompt = async () => {
         const prompt = buildMegaPrompt(formData.idea, formData.curso, formData.duracion, formData.subjects);
-        navigator.clipboard.writeText(prompt);
-        toast.success('¡Prompt copiado! Ahora pégalo en ChatGPT/Gemini.');
+        await copyToClipboard(prompt);
+        toast.success('Prompt copiado al portapapeles. ¡Ahora pégalo en ChatGPT/Gemini!');
     };
 
     const handleProcessAI = () => {

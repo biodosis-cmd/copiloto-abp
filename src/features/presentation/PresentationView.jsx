@@ -75,7 +75,7 @@ export function PresentationView({ data, onExit }) {
             </div>
 
             {/* Main Content Area */}
-            <div className="flex-1 w-full h-full relative">
+            <div className="flex-1 w-full h-full relative overflow-y-auto scrollbar-hide">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={currentSlide}

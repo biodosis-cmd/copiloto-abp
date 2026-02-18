@@ -9,6 +9,7 @@ import { PresentationView } from '@/features/presentation/PresentationView'
 import { DashboardLayout } from '@/layouts/DashboardLayout'
 import { Toaster, toast } from 'sonner'
 import { db } from './db'
+import { generateUUID } from '@/utils/uuid'
 
 function App() {
   const [session, setSession] = useState(null);
@@ -36,7 +37,7 @@ function App() {
   useEffect(() => {
     if (!session?.user) return;
 
-    const mySessionId = crypto.randomUUID();
+    const mySessionId = generateUUID();
     let channel;
 
     const enforceSingleSession = async () => {

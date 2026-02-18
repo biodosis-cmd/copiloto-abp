@@ -46,12 +46,22 @@ export const buildMegaPrompt = (idea, curso, duracion, asignaturas) => {
   - NORMATIVA APLICABLE: ${normativas}
   - DURACIÓN: ${duracion} semanas
   - ASIGNATURAS INTEGRADAS: ${asignaturas.join(', ')}
+
+  MARCO TEÓRICO: APRENDIZAJE PROFUNDO (MICHAEL FULLAN) - LAS 6C:
+  Debes integrar transversalmente estas competencias:
+  1. Carácter: Aprender a aprender, resiliencia, autorregulación.
+  2. Ciudadanía: Visión global, empatía, sostenibilidad.
+  3. Colaboración: Trabajo en equipo, interdependencia positiva.
+  4. Comunicación: Claridad, diversas audiencias y herramientas.
+  5. Creatividad: Soluciones nuevas, pensamiento emprendedor.
+  6. Pensamiento Crítico: Evaluar información, resolver problemas complejos.
   
   REGLAS DE PLANIFICACIÓN (ESTRICTAS):
   1. Filtro de Nivel: Antes de proponer un Objetivo de Aprendizaje (OA), verifica que corresponda estrictamente al nivel y asignatura solicitada según la normativa citada. No mezcles OAs de básica en educación media ni viceversa.
   2. Estructura del OA: Cada OA seleccionado debe incluir su número y el texto íntegro según el documento oficial vigente.
-  3. Vinculación: Relaciona el OA con los Indicadores de Evaluación sugeridos por el MINEDUC y los Objetivos de Aprendizaje Transversales (OAT).
-  4. Vigencia Legal: Asegúrate siempre de verificar si la normativa citada sigue vigente o ha sido actualizada a la fecha, basando tu respuesta siempre en los documentos oficiales más recientes válidos en Chile.
+  3. Vinculación: Relaciona el OA con los Indicadores de Evaluación sugeridos por el MINEDUC.
+  4. Vigencia Legal: Asegúrate siempre de verificar si la normativa citada sigue vigente.
+  5. INTEGRACIÓN 6C: Aunque los OAs son los oficiales, las ACTIVIDADES y la EVALUACIÓN deben estar diseñadas para movilizar las 6C de Fullan. No diseñes actividades de "relleno" o solo memorísticas.
   
   FORMATO DE SALIDA (ESTRICTO):
   Debes responder ÚNICAMENTE con un objeto JSON válido. NO añadidas texto introductorio ni de cierre. El JSON debe seguir EXACTAMENTE esta estructura:
@@ -69,7 +79,7 @@ export const buildMegaPrompt = (idea, curso, duracion, asignaturas) => {
       ...
     ],
     "rai": ["Resultado de Aprendizaje Indicador 1", "Resultado de Aprendizaje Indicador 2"],
-    "hsxxi": ["Habilidad Siglo XXI 1", "Habilidad Siglo XXI 2"],
+    "hsxxi": ["Competencia 6C 1 (ej: Carácter - Resiliencia)", "Competencia 6C 2 (ej: Creatividad - Solución de problemas)"],
     "producto_final": "Descripción detallada del artefacto o producto que crearán los estudiantes",
     "pregunta_guia": "¿Pregunta desafiante que impulsa el proyecto?",
     "cronograma": [
@@ -127,7 +137,7 @@ export const buildRubricPrompt = (projectData) => {
   - NIVEL: ${projectData.curso || "No especificado"}
   - OBJETIVOS DE APRENDIZAJE: ${JSON.stringify(projectData.oai || [])}
   - PRODUCTO FINAL: "${projectData.producto_final || "No especificado"}"
-  - HABILIDADES S.XXI: ${JSON.stringify(projectData.hsxxi || [])}
+  - COMPETENCIAS 6C (Fullan): ${JSON.stringify(projectData.hsxxi || [])}
   
   FORMATO DE SALIDA (ESTRICTO JSON):
   Debes responder ÚNICAMENTE con un objeto JSON válido con la siguiente estructura:
@@ -149,6 +159,8 @@ export const buildRubricPrompt = (projectData) => {
   }
 
   IMPORTANTE:
+  - Los criterios deben estar ALINEADOS con las 6C de Michael Fullan (Carácter, Ciudadanía, Colaboración, Comunicación, Creatividad, Pensamiento Crítico).
+  - Evalúa tanto el proceso (competencias) como el producto final.
   - Los criterios deben ser específicos y observables.
   - El lenguaje debe ser constructivo.
   - NO uses markdown para el bloque de código, solo el texto plano del JSON.
@@ -232,6 +244,7 @@ export const buildInstrumentPrompt = (clase, proyecto) => {
   3. REDACTA LOS ITEMS CON LENGUAJE CERCANO Y ADECUADO A LA EDAD (${proyecto.curso}).
      - Sé específico con lo que se evalúa (evita generalidades como "trabajó bien").
      - Vincula los indicadores DIRECTAMENTE con el contenido de la clase y el proyecto.
+     - Si es pertinente, evalúa alguna de las 6C (Colaboración, Comunicación, Pensamiento Crítico, etc.) movilizada en la clase.
 
   4. TU RESPUESTA DEBE SER ÚNICAMENTE UN JSON CON ESTA ESTRUCTURA EXACTA:
 

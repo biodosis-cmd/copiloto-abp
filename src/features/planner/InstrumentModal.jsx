@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { AlertCircle, Copy, FileText, Save, Wand2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { copyToClipboard } from "@/utils/clipboard.js";
 import { buildInstrumentPrompt, parseAIResponse } from '@/services/ai';
 import { exportInstrumentToDocx } from '@/utils/export';
 
@@ -25,10 +27,10 @@ export function InstrumentModal({ isOpen, onClose, clase, claseIndex, projectDat
         }
     }, [clase, isOpen]);
 
-    const handleCopyPrompt = () => {
+    const handleCopyPrompt = async () => {
         const prompt = buildInstrumentPrompt(clase, projectData);
-        navigator.clipboard.writeText(prompt);
-        toast.success("Prompt copiado. ¡Pégalo en tu IA!");
+        await copyToClipboard(prompt);
+        toast.success("Prompt copiado al portapapeles");
         setStep('json');
     };
 

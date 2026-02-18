@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Copy, Wand2, Calculator, Save, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { copyToClipboard } from "@/utils/clipboard.js";
 import { buildRubricPrompt, parseAIResponse } from '@/services/ai';
 import { exportRubricToDocx } from '@/utils/export';
 
@@ -13,9 +15,9 @@ export function RubricView({ data, onUpdate }) {
 
     const rubric = data.rubrica || null;
 
-    const handleCopyPrompt = () => {
+    const handleCopyPrompt = async () => {
         const prompt = buildRubricPrompt(data);
-        navigator.clipboard.writeText(prompt);
+        await copyToClipboard(prompt);
         toast.success("Prompt copiado al portapapeles. ¡Pégalo en tu IA!");
         setIsGenerating(true);
     };
@@ -125,7 +127,7 @@ export function RubricView({ data, onUpdate }) {
                 <div className="flex items-center gap-2">
                     <h2 className="text-xl font-bold text-slate-800">Rúbrica de Evaluación</h2>
                     <span className="bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wide">
-                        {rubric.criterios.length} Criterios
+                        {rubric?.criterios?.length || 0} Criterios
                     </span>
                 </div>
                 <div className="flex gap-2">
@@ -155,7 +157,7 @@ export function RubricView({ data, onUpdate }) {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                            {rubric.criterios.map((criterio, idx) => (
+                            {rubric?.criterios?.map((criterio, idx) => (
                                 <tr key={idx} className="hover:bg-slate-50/50 group transition-colors">
                                     <td className="p-4 align-top sticky left-0 bg-white group-hover:bg-slate-50/50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
                                         <div
@@ -184,7 +186,7 @@ export function RubricView({ data, onUpdate }) {
                                                 suppressContentEditableWarning
                                                 onBlur={(e) => handleUpdateCell(idx, null, e.currentTarget.textContent, level)}
                                             >
-                                                {criterio.niveles[level] || "-"}
+                                                {criterio.niveles?.[level] || "-"}
                                             </div>
                                         </td>
                                     ))}

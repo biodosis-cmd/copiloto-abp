@@ -7,6 +7,7 @@ import { MatrixView } from '../planner/MatrixView';
 import { ScheduleView } from '../planner/ScheduleView';
 import { RubricView } from '../planner/RubricView';
 import { ExportMenu } from '@/components/ExportMenu';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 export function ProjectDashboard({ data, onReset, onUpdateProject, onPresent, onRefine, isFreshProject }) {
     const [activeTab, setActiveTab] = useState('overview'); // 'overview' (matrix) | 'timeline' (schedule)
@@ -118,7 +119,7 @@ export function ProjectDashboard({ data, onReset, onUpdateProject, onPresent, on
                     <Button
                         variant="outline"
                         onClick={onPresent}
-                        className="hidden md:flex items-center gap-2 border-indigo-200 text-indigo-700 hover:bg-indigo-50"
+                        className="flex items-center gap-2 border-indigo-200 text-indigo-700 hover:bg-indigo-50"
                     >
                         <Presentation className="w-4 h-4" />
                         Presentar
@@ -167,13 +168,15 @@ export function ProjectDashboard({ data, onReset, onUpdateProject, onPresent, on
                 )}
 
                 {activeTab === 'rubric' && (
-                    <RubricView
-                        data={localData}
-                        onUpdate={(newData) => {
-                            setLocalData(newData);
-                            if (onUpdateProject) onUpdateProject(newData);
-                        }}
-                    />
+                    <ErrorBoundary onReset={() => setActiveTab('overview')}>
+                        <RubricView
+                            data={localData}
+                            onUpdate={(newData) => {
+                                setLocalData(newData);
+                                if (onUpdateProject) onUpdateProject(newData);
+                            }}
+                        />
+                    </ErrorBoundary>
                 )}
             </div>
         </div>
