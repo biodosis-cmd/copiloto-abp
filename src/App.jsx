@@ -169,7 +169,13 @@ function App() {
   return (
     <>
       <Toaster position="top-center" richColors />
-      <DashboardLayout currentView={view} onNavigate={setView} user={session?.user}>
+      <DashboardLayout
+        currentView={view}
+        onNavigate={setView}
+        user={session?.user}
+        projectData={data}
+        onPresent={() => setView('presentation')}
+      >
         {view === 'dashboard' && (
           <ProjectList
             onNewProject={() => {
@@ -187,10 +193,15 @@ function App() {
         {view === 'wizard' && (
           <div className="py-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="text-center mb-10">
-              <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight mb-2">Crear Nuevo Proyecto ABP</h1>
-              <p className="text-lg text-slate-500">Diseña experiencias de aprendizaje inolvidables con tu IA favorita.</p>
+              <h1 className="text-5xl font-extrabold tracking-tight mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-200 to-blue-200">
+                Crear Nuevo Proyecto ABP
+              </h1>
+              <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+                Diseña experiencias de aprendizaje inolvidables con la potencia de la inteligencia artificial.
+              </p>
             </div>
             {/* We pass handleWizardSubmit directly */}
+
             <ProjectWizard
               onSubmit={handleWizardSubmit}
               isLoading={isLoading}

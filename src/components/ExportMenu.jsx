@@ -1,118 +1,84 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Download, FileText, File, ChevronRight } from 'lucide-react';
+import { FileText, FileDown, Download, Layers } from 'lucide-react';
 import { toast } from 'sonner';
 import { exportToDocx, exportToDocxLandscape, exportToPdfLandscape, exportToPdfVertical } from '@/utils/export';
+import { cn } from '@/lib/utils';
 
 export function ExportMenu({ data }) {
-    const [isOpen, setIsOpen] = useState(false);
-    const menuRef = useRef(null);
-
-    // Close on click outside
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (menuRef.current && !menuRef.current.contains(event.target)) {
-                setIsOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
     const handleExport = (action, label) => {
         if (!data.nombre_colegio) {
-            toast.error('Debes indicar el nombre del colegio antes de descargar.');
+            toast.error('Indica el nombre del institución para exportar.');
             return;
         }
 
-        try {
-            action(data);
-            setIsOpen(false);
-            toast.success(`Exportando ${label}...`);
-        } catch (error) {
-            console.error(error);
-            toast.error(`Error al exportar ${label}`);
-        }
+        toast.promise(
+            async () => {
+                await action(data);
+            },
+            {
+                loading: `Generando ${label}...`,
+                success: `${label} generado`,
+                error: `Error: ${label}`
+            }
+        );
     };
 
-    const options = [
-        {
-            type: 'Word (.docx)',
-            icon: FileText,
-            color: 'text-blue-600',
-            bg: 'bg-blue-50',
-            items: [
-                { label: 'Formato Vertical', action: exportToDocx },
-                { label: 'Formato Horizontal', action: exportToDocxLandscape }
-            ]
-        },
-        {
-            type: 'PDF (.pdf)',
-            icon: Download,
-            color: 'text-red-600',
-            bg: 'bg-red-50',
-            items: [
-                { label: 'Formato Vertical', action: exportToPdfVertical },
-                { label: 'Formato Horizontal', action: exportToPdfLandscape }
-            ]
-        }
+    const exportOptions = [
+        { label: 'Word Vertical', icon: FileText, action: exportToDocx, color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/20' },
+        { label: 'Word Horizontal', icon: Layers, action: exportToDocxLandscape, color: 'text-indigo-400', bg: 'bg-indigo-500/10', border: 'border-indigo-500/20' },
+        { label: 'PDF Vertical', icon: FileDown, action: exportToPdfVertical, color: 'text-rose-400', bg: 'bg-rose-500/10', border: 'border-rose-500/20' },
+        { label: 'PDF Horizontal', icon: Download, action: exportToPdfLandscape, color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/20' },
     ];
 
     return (
-        <div className="relative z-50" ref={menuRef}>
-            <motion.button
-                whileHover={{ scale: 1.1, rotate: isOpen ? 90 : 0 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={() => setIsOpen(!isOpen)}
-                className={`
-                    relative group flex items-center justify-center w-10 h-10 rounded-full shadow-sm transition-all duration-300
-                    ${isOpen
-                        ? 'bg-indigo-600 text-white shadow-indigo-200'
-                        : 'bg-white text-slate-500 hover:text-indigo-600 border border-slate-200 hover:border-indigo-300'}
-                `}
-            >
-                <Download className="h-5 w-5" />
+        <div className="flex items-center gap-2 px-2">
+            {exportOptions.map((opt, idx) => (
+                <ExportButton key={idx} opt={opt} onExport={() => handleExport(opt.action, opt.label)} />
+            ))}
+        </div>
+    );
+}
 
-                {/* Tooltip only when closed */}
-                {!isOpen && (
-                    <div className="absolute right-full top-1/2 -translate-y-1/2 mr-3 px-2 py-1 bg-slate-800 text-white text-xs font-medium rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-                        Exportar
-                        <div className="absolute left-full top-1/2 -translate-y-1/2 border-4 border-transparent border-l-slate-800" />
-                    </div>
+function ExportButton({ opt, onExport }) {
+    const [showTooltip, setShowTooltip] = useState(false);
+
+    return (
+        <div className="relative flex flex-col items-center">
+            <button
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+                onClick={onExport}
+                className={cn(
+                    "flex items-center justify-center h-10 w-10 md:h-9 md:w-9 rounded-xl border transition-all duration-300 shadow-lg flex-shrink-0",
+                    "card-glass bg-slate-900/40 hover:bg-slate-900/80 hover:border-white/20",
+                    opt.border,
+                    "group"
                 )}
-            </motion.button>
+            >
+                <div className={cn(
+                    "p-1.5 rounded-lg transition-colors duration-300",
+                    opt.bg,
+                    opt.color
+                )}>
+                    <opt.icon className="w-4 h-4" />
+                </div>
+            </button>
 
             <AnimatePresence>
-                {isOpen && (
+                {showTooltip && (
                     <motion.div
-                        initial={{ opacity: 0, y: 10, scale: 0.9, x: 0 }}
-                        animate={{ opacity: 1, y: 0, scale: 1, x: 0 }}
-                        exit={{ opacity: 0, y: 10, scale: 0.9 }}
-                        transition={{ duration: 0.2 }}
-                        className="absolute right-0 md:right-0 left-0 md:left-auto top-full mt-3 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 overflow-hidden origin-top-left md:origin-top-right"
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        transition={{ duration: 0.2, ease: "easeOut" }}
+                        className="absolute bottom-full mb-3 px-3 py-1.5 bg-slate-900/95 border border-slate-700/50 backdrop-blur-md rounded-lg shadow-2xl z-[100] whitespace-nowrap pointer-events-none"
                     >
-                        <div className="flex flex-col gap-1">
-                            {options.map((group, idx) => (
-                                <div key={idx} className="p-2 first:mb-1">
-                                    <div className="flex items-center gap-2 px-2 pb-2 mb-1 border-b border-slate-50 last:border-0 opacity-80">
-                                        <group.icon className={`h-3.5 w-3.5 ${group.color}`} />
-                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{group.type}</span>
-                                    </div>
-                                    <div className="space-y-1">
-                                        {group.items.map((item, itemIdx) => (
-                                            <button
-                                                key={itemIdx}
-                                                onClick={() => handleExport(item.action, item.label)}
-                                                className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-slate-600 hover:text-indigo-700 hover:bg-slate-50 rounded-lg transition-colors text-left group/item"
-                                            >
-                                                <span>{item.label}</span>
-                                                <ChevronRight className="h-3 w-3 opacity-0 -translate-x-2 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all text-indigo-400" />
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">
+                            {opt.label}
+                        </span>
+                        {/* Tooltip Arrow */}
+                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900/95" />
                     </motion.div>
                 )}
             </AnimatePresence>

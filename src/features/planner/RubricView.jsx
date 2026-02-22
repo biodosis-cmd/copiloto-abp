@@ -72,16 +72,17 @@ export function RubricView({ data, onUpdate }) {
 
     if (!rubric && !isGenerating) {
         return (
-            <div className="flex flex-col items-center justify-center p-12 text-center bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 min-h-[400px]">
-                <div className="p-4 bg-indigo-100 rounded-full mb-6 text-indigo-600">
-                    <Calculator className="w-12 h-12" />
+            <div className="flex flex-col items-center justify-center p-12 text-center card-glass rounded-3xl border-dashed border-slate-700/50 min-h-[500px] relative overflow-hidden group">
+                <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/5 to-transparent pointer-events-none" />
+                <div className="p-6 bg-indigo-500/10 rounded-2xl mb-8 text-indigo-400 border border-indigo-500/20 shadow-2xl relative z-10 group-hover:scale-110 transition-transform duration-500">
+                    <Calculator className="w-16 h-16" />
                 </div>
-                <h3 className="text-2xl font-bold text-slate-800 mb-2">Aún no hay Rúbrica de Evaluación</h3>
-                <p className="text-slate-500 max-w-lg mb-8">
+                <h3 className="text-3xl font-black text-white mb-4 relative z-10 tracking-tight">Instrumentos de Evaluación</h3>
+                <p className="text-slate-400 max-w-lg mb-10 relative z-10 leading-relaxed font-medium">
                     Genera una rúbrica detallada automáticamente basándote en los objetivos y productos de este proyecto.
                 </p>
-                <Button onClick={handleCopyPrompt} className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-200">
-                    <Wand2 className="w-5 h-5 mr-2" />
+                <Button onClick={handleCopyPrompt} size="lg" className="relative z-10 rounded-2xl px-10 py-8 font-black uppercase tracking-[0.15em] text-xs shadow-2xl shadow-indigo-500/20">
+                    <Wand2 className="w-5 h-5 mr-3 animate-pulse" />
                     Generar Rúbrica con IA
                 </Button>
             </div>
@@ -90,31 +91,32 @@ export function RubricView({ data, onUpdate }) {
 
     if (isGenerating && !rubric) {
         return (
-            <div className="max-w-2xl mx-auto space-y-6">
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex gap-3 text-amber-800 text-sm">
-                    <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                    <p>
-                        <strong> Instrucciones:</strong> Ya copiaste el prompt. Ahora ve a ChatGPT/Claude, pega el prompt, y cuando genere la respuesta, copia <strong>SOLO EL CÓDIGO JSON</strong> resultante y pégalo aquí abajo.
-                    </p>
+            <div className="max-w-3xl mx-auto space-y-8 animate-in fade-in duration-500">
+                <div className="bg-amber-500/5 border border-amber-500/20 rounded-2xl p-6 flex gap-4 text-amber-200 text-sm shadow-xl">
+                    <AlertCircle className="w-6 h-6 flex-shrink-0 text-amber-500" />
+                    <div className="leading-relaxed">
+                        <strong className="block mb-1 text-amber-400 font-black uppercase tracking-widest text-[10px]">Instrucciones:</strong>
+                        Ya copiaste el prompt. Ahora ve a ChatGPT/Claude, pega el prompt, y cuando genere la respuesta, copia <span className="text-white font-bold underline decoration-amber-500/50">SOLO EL CÓDIGO JSON</span> resultante y pégalo aquí abajo.
+                    </div>
                 </div>
 
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">Pegar JSON de la IA aquí:</label>
+                <div className="space-y-3">
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Entrada de Datos JSON</label>
                     <textarea
                         value={jsonInput}
                         onChange={(e) => setJsonInput(e.target.value)}
-                        className="w-full h-64 p-4 rounded-xl border border-slate-300 font-mono text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-full h-80 p-6 rounded-3xl border border-slate-800 bg-slate-950/50 text-indigo-300 font-mono text-xs focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/50 transition-all shadow-2xl outline-none"
                         placeholder='{ "criterios": [ ... ] }'
                     />
                 </div>
 
-                <div className="flex gap-3 justify-end">
-                    <Button variant="outline" onClick={() => setIsGenerating(false)}>
+                <div className="flex gap-4 justify-end">
+                    <Button variant="ghost" onClick={() => setIsGenerating(false)} className="rounded-xl px-6 font-bold uppercase tracking-widest text-[10px] text-slate-500 hover:text-white">
                         Cancelar
                     </Button>
-                    <Button onClick={handleProcessJson} className="bg-indigo-600 text-white">
+                    <Button onClick={handleProcessJson} className="rounded-2xl px-8 font-black uppercase tracking-widest text-xs py-6 shadow-xl shadow-indigo-500/20">
                         <Save className="w-4 h-4 mr-2" />
-                        Procesar y Guardar
+                        Materializar Rúbrica
                     </Button>
                 </div>
             </div>
@@ -122,46 +124,48 @@ export function RubricView({ data, onUpdate }) {
     }
 
     return (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
-            <div className="flex justify-between items-center mb-4 no-print">
-                <div className="flex items-center gap-2">
-                    <h2 className="text-xl font-bold text-slate-800">Rúbrica de Evaluación</h2>
-                    <span className="bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wide">
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="flex justify-between items-center mb-4 no-print px-2">
+                <div className="flex items-center gap-4">
+                    <h2 className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 tracking-tight">Rúbrica de Evaluación</h2>
+                    <span className="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest shadow-inner">
                         {rubric?.criterios?.length || 0} Criterios
                     </span>
                 </div>
-                <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={() => {
+                <div className="flex gap-3">
+                    <Button variant="ghost" size="sm" onClick={() => {
                         if (confirm("¿Estás seguro? Esto borrará la rúbrica actual.")) {
                             onUpdate({ ...data, rubrica: null });
                         }
-                    }} className="text-red-500 hover:bg-red-50 border-red-200">
+                    }} className="text-rose-500 hover:bg-rose-500/10 hover:text-rose-400 border-transparent font-bold uppercase tracking-widest text-[10px] rounded-xl px-4">
                         Eliminar
                     </Button>
-                    <Button size="sm" onClick={() => exportRubricToDocx(data, rubric)} className="bg-blue-600 text-white hover:bg-blue-700">
+                    <Button size="sm" onClick={() => exportRubricToDocx(data, rubric)} className="bg-slate-800 text-white hover:bg-slate-700 border border-slate-700 rounded-xl px-6 font-bold uppercase tracking-widest text-[10px] shadow-xl">
                         Exportar Word (.docx)
                     </Button>
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left border-collapse min-w-[1000px]">
+            <div className="card-glass rounded-[2rem] border-slate-700/30 overflow-hidden shadow-2xl relative">
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-indigo-600/5 rounded-full blur-[120px] -mr-80 -mt-80 pointer-events-none" />
+
+                <div className="overflow-x-auto relative z-10">
+                    <table className="w-full text-sm text-left border-collapse min-w-[1100px]">
                         <thead>
-                            <tr className="bg-slate-50 border-b border-slate-200">
-                                <th className="p-4 w-[20%] min-w-[200px] font-bold text-slate-700 uppercase text-xs tracking-wider sticky left-0 bg-slate-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">Criterio y Peso</th>
-                                <th className="p-4 w-[20%] min-w-[200px] font-bold text-indigo-700 uppercase text-xs tracking-wider border-l border-slate-100 bg-indigo-50/30">Excelente (7.0)</th>
-                                <th className="p-4 w-[20%] min-w-[200px] font-bold text-emerald-700 uppercase text-xs tracking-wider border-l border-slate-100 bg-emerald-50/30">Bueno (5.0 - 6.0)</th>
-                                <th className="p-4 w-[20%] min-w-[200px] font-bold text-amber-700 uppercase text-xs tracking-wider border-l border-slate-100 bg-amber-50/30">Suficiente (4.0)</th>
-                                <th className="p-4 w-[20%] min-w-[200px] font-bold text-rose-700 uppercase text-xs tracking-wider border-l border-slate-100 bg-rose-50/30">Insuficiente (1.0 - 3.9)</th>
+                            <tr className="bg-slate-950/80 backdrop-blur-xl border-b border-slate-800">
+                                <th className="p-6 w-[20%] min-w-[240px] font-black text-slate-500 uppercase text-[10px] tracking-[0.2em] sticky left-0 bg-slate-950/90 z-20 shadow-[4px_0_10px_-5px_rgba(0,0,0,0.5)]">Criterio y Peso</th>
+                                <th className="p-6 w-[20%] min-w-[240px] font-black text-indigo-400 uppercase text-[10px] tracking-[0.2em] border-l border-slate-800/50 bg-indigo-500/5">Excelente (7.0)</th>
+                                <th className="p-6 w-[20%] min-w-[240px] font-black text-emerald-400 uppercase text-[10px] tracking-[0.2em] border-l border-slate-800/50 bg-emerald-500/5">Bueno (5.0 - 6.0)</th>
+                                <th className="p-6 w-[20%] min-w-[240px] font-black text-amber-400 uppercase text-[10px] tracking-[0.2em] border-l border-slate-800/50 bg-amber-500/5">Suficiente (4.0)</th>
+                                <th className="p-6 w-[20%] min-w-[240px] font-black text-rose-400 uppercase text-[10px] tracking-[0.2em] border-l border-slate-800/50 bg-rose-500/5">Insuficiente (1.0 - 3.9)</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100">
+                        <tbody className="divide-y divide-slate-800/30">
                             {rubric?.criterios?.map((criterio, idx) => (
-                                <tr key={idx} className="hover:bg-slate-50/50 group transition-colors">
-                                    <td className="p-4 align-top sticky left-0 bg-white group-hover:bg-slate-50/50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                                <tr key={idx} className="hover:bg-white/[0.02] group transition-all duration-300">
+                                    <td className="p-6 align-top sticky left-0 bg-slate-900/95 group-hover:bg-slate-900 z-20 shadow-[4px_0_10px_-5px_rgba(0,0,0,0.5)] transition-colors">
                                         <div
-                                            className="font-bold text-slate-900 mb-1 outline-none hover:bg-indigo-50 rounded px-1 -ml-1 cursor-text focus:ring-1 focus:ring-indigo-300"
+                                            className="font-black text-white mb-2 outline-none hover:bg-indigo-500/10 rounded-xl p-2 -ml-2 cursor-text transition-all focus:ring-2 focus:ring-indigo-500/30 leading-tight"
                                             contentEditable
                                             suppressContentEditableWarning
                                             onBlur={(e) => handleUpdateCell(idx, 'nombre', e.currentTarget.textContent)}
@@ -169,7 +173,7 @@ export function RubricView({ data, onUpdate }) {
                                             {criterio.nombre}
                                         </div>
                                         <div
-                                            className="text-slate-400 text-xs font-mono outline-none hover:bg-slate-100 rounded px-1 -ml-1 cursor-text w-fit"
+                                            className="text-indigo-400/60 text-[10px] font-black uppercase tracking-widest outline-none hover:bg-slate-800 rounded-lg px-2 py-1 -ml-1 cursor-text w-fit transition-all"
                                             contentEditable
                                             suppressContentEditableWarning
                                             onBlur={(e) => handleUpdateCell(idx, 'peso', e.currentTarget.textContent)}
@@ -179,9 +183,9 @@ export function RubricView({ data, onUpdate }) {
                                     </td>
 
                                     {['excelente', 'bueno', 'suficiente', 'insuficiente'].map((level) => (
-                                        <td key={level} className="p-4 align-top border-l border-slate-100 relative">
+                                        <td key={level} className="p-6 align-top border-l border-slate-800/50 relative">
                                             <div
-                                                className="text-slate-600 leading-relaxed outline-none focus:bg-white focus:shadow-md focus:ring-2 focus:ring-indigo-500 rounded p-2 transition-all min-h-[80px]"
+                                                className="text-slate-300 leading-relaxed outline-none focus:bg-slate-950 focus:shadow-2xl focus:ring-2 focus:ring-indigo-500/50 rounded-2xl p-4 transition-all min-h-[100px] font-medium selection:bg-indigo-500/30"
                                                 contentEditable
                                                 suppressContentEditableWarning
                                                 onBlur={(e) => handleUpdateCell(idx, null, e.currentTarget.textContent, level)}
@@ -197,9 +201,10 @@ export function RubricView({ data, onUpdate }) {
                 </div>
             </div>
 
-            <p className="text-center text-xs text-slate-400 italic mt-4 no-print">
-                * Puedes editar cualquier texto haciendo clic directamente sobre él.
+            <p className="text-center text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 mt-8 no-print animate-pulse">
+                * Haz clic en cualquier texto para editarlo directamente
             </p>
         </div>
     );
 }
+
